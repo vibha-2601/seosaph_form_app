@@ -1,13 +1,13 @@
 import './App.css';
-import Index from './components/Index';
+import CreateForm from './components/CreateForm/index';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Index />
-      
+    <div>
+      <CreateForm />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
+
