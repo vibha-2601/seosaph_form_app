@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import {
-  Paper,
-  Box,
-  Grid,
-  TextField,
-  IconButton,
-  Button,
-} from "@material-ui/core";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Paper, Box, TextField, Grid, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 // styles
 const useStyles = makeStyles((theme) => ({
@@ -22,28 +18,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateForm = () => {
+
+  // [States]
   const classes = useStyles();
-  const userTemplate = { name: "", email: "", phone: "", address: "" };
-  const [users, setUsers] = useState([userTemplate]);
+  const [inputType, setInputType] = useState("");
+const [inputLabel, setInputLabel] = useState('');
+const [choices, setChoices] = useState('');
 
-  // adding Users
-  const addUser = () => {
-    setUsers([...users, userTemplate]);
+  
+
+  // data
+  const [data, setData] = useState([]);
+
+
+
+// Input type onchange
+  const handleChange = (event) => {
+    setInputType(event.target.value);
   };
 
-  // set input values
-  const onChange = (e, index) => {
-    let data = [...users];
-    data[index][e.target.name] = e.target.value;
-    setUsers(data);
-  };
+  // add field
+  const handleAddField = () => {
+const object = {
+  label: inputLabel,
+  type: inputType,
+  choices: choices?.split(',')
+}
+setData([...data,object])
+setInputLabel("")
+setInputType("")
+setChoices("")
 
-  //removed row
-  const removeUser = (index) => {
-    const filteredUsers = [...users];
-    filteredUsers.splice(index, 1);
-    setUsers(filteredUsers);
-  };
+console.log(data)
+  }
 
   return (
     <div className={classes.root}>
@@ -60,73 +67,62 @@ const CreateForm = () => {
           Create Dynamic Form
         </div>
 
-        {/* Data */}
-        {users.map((user, index) => (
-          <Grid
-            container
-            spacing={3}
-            key={index}
-            className={classes.inputGroup}
-          >
-            <Grid item md={3}>
-              <TextField
-                label="Name"
-                placeholder="Enter Your Full Name"
-                variant="outlined"
-                name="name"
-                onChange={(e) => onChange(e, index)}
-                value={user.name}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item md={3}>
-              <TextField
-                label="E-mail"
-                placeholder="Enter Your Email"
-                variant="outlined"
-                name="email"
-                onChange={(e) => onChange(e, index)}
-                value={user.email}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item md={2}>
-              <TextField
-                label="Phone"
-                placeholder="Enter Your FPhone no"
-                variant="outlined"
-                name="phone"
-                onChange={(e) => onChange(e, index)}
-                value={user.phone}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item md={3}>
-              <TextField
-                label="Address"
-                placeholder="Enter Your Address"
-                variant="outlined"
-                name="address"
-                onChange={(e) => onChange(e, index)}
-                value={user.address}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item md={1}>
-              <IconButton color="secondary" onClick={() => removeUser(index)}>
-                <DeleteOutlineIcon />
-              </IconButton>
-            </Grid>
+        <Grid container spacing={2}>
+          {/* [Label Input] */}
+          <Grid item xs={12} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}>
+            <TextField
+              id="outlined-basic"
+              label="Enter input label"
+              variant="outlined"
+              size="medium"
+              style={{ width: "100%" }}
+              value={inputLabel}
+              onChange={(e) => setInputLabel(e.target.value)}
+            />
           </Grid>
-        ))}
 
-        <Button variant="contained" color="primary" onClick={addUser}>
-          Add More
-        </Button>
+          {/* [Type input select] */}
+          <Grid item xs={12} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}>
+            <FormControl style={{ width: "100%" }} size="medium">
+              <InputLabel id="demo-select-small">Input Type</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={inputType}
+                label="Input Type"
+                onChange={handleChange}
+              >
+                <MenuItem value="select">select</MenuItem>
+                <MenuItem value="checkbox">checkbox</MenuItem>
+                <MenuItem value="radio">radio</MenuItem>
+                <MenuItem value="input">input</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* [If type select] */}
+          {["select", "radio", "checkbox"]?.includes(inputType) && (
+          <Grid item xs={12} md={3}>
+            
+              <TextField
+                style={{ width: "100%" }}
+                id="input"
+                label="Enter choices separated by commas"
+                placeholder="Enter choices separated by commas"
+                variant="outlined"
+                size="medium"
+                value={choices}
+                onChange={(e) => setChoices(e.target.value)}
+              />
+           
+          </Grid>
+           )}
+
+          {/* Button */}
+          <Grid item xs={24} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 2}>
+<Button size='large' style={{width: '100%'}} variant="outlined" onClick={handleAddField}>Add</Button>
+          </Grid>
+        </Grid>
       </Paper>
     </div>
   );
