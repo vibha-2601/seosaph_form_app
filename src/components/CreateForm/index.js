@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "90%",
     height: "100%",
-    marginTop: 40,
   },
   inputGroup: {
     marginBottom: theme.spacing(1),
@@ -48,7 +47,7 @@ const CreateForm = () => {
 
   return (
     <div className={classes.root}>
-      <Paper component={Box} style={{ padding: 20 }}>
+      <Paper component={Box} style={{ padding: 20, marginTop: 40 }}>
         {/* Heading */}
         <div
           style={{
