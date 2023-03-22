@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Container,
   Paper,
   Box,
   Grid,
@@ -14,10 +13,9 @@ import { makeStyles } from "@material-ui/core/styles";
 // styles
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: theme.palette.grey[300],
-    paddingTop: theme.spacing(5),
+    width: "90%",
+    height: "100%",
+    marginTop: 40,
   },
   inputGroup: {
     marginBottom: theme.spacing(1),
@@ -49,7 +47,7 @@ const CreateForm = () => {
   };
 
   return (
-    <Container className={classes.root}>
+    <div className={classes.root}>
       <Paper component={Box} style={{ padding: 20 }}>
         {/* Heading */}
         <div
@@ -131,7 +129,7 @@ const CreateForm = () => {
           Add More
         </Button>
       </Paper>
-    </Container>
+    </div>
   );
 };
 
