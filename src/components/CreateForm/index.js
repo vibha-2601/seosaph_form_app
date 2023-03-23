@@ -11,12 +11,14 @@ import {
   FormControlLabel,
   Checkbox,
   FormGroup,
+  IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 // styles
 const useStyles = makeStyles((theme) => ({
@@ -67,13 +69,12 @@ const CreateForm = () => {
   };
 
   // delete
-  const handleDelete = (fields ,index) => {
-
+  const handleDelete = (fields, index) => {
     const filterItems = fields?.filter((item) => {
-      return fields?.indexOf(item) !== index
-    })
+      return fields?.indexOf(item) !== index;
+    });
     setData(filterItems);
-    localStorage.setItem("formData", JSON.stringify(filterItems))
+    localStorage.setItem("formData", JSON.stringify(filterItems));
   };
 
   return (
@@ -91,7 +92,15 @@ const CreateForm = () => {
           Create Dynamic Form
         </div>
 
-        <Grid container spacing={2}>
+        <Grid
+          container
+          spacing={2}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           {/* [Label Input] */}
           <Grid
             item
@@ -102,7 +111,7 @@ const CreateForm = () => {
               id="outlined-basic"
               label="Enter input label"
               variant="outlined"
-              size="medium"
+              size="small"
               style={{ width: "100%" }}
               value={inputLabel}
               onChange={(e) => setInputLabel(e.target.value)}
@@ -115,7 +124,7 @@ const CreateForm = () => {
             xs={12}
             md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}
           >
-            <FormControl style={{ width: "100%" }} size="medium">
+            <FormControl style={{ width: "100%" }} size="small">
               <InputLabel id="demo-select-small">Input Type</InputLabel>
               <Select
                 labelId="demo-select-small"
@@ -141,7 +150,7 @@ const CreateForm = () => {
                 label="Enter choices separated by commas"
                 placeholder="Enter choices separated by commas"
                 variant="outlined"
-                size="medium"
+                size="small"
                 value={choices}
                 onChange={(e) => setChoices(e.target.value)}
               />
@@ -177,7 +186,6 @@ const CreateForm = () => {
         )}
 
         {/* Data */}
-
         {data?.length > 0 && (
           <div
             style={{
@@ -190,73 +198,112 @@ const CreateForm = () => {
             My Form
           </div>
         )}
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           {data?.map((item, index) => (
-<Grid item xs={12} md={6} key={index}>
+            <Grid item xs={12} md={6} key={index}>
               <div>
                 {item?.type === "input" ? (
-                  <div>
-                  <TextField
-                    id="outlined-basic"
-                    label={item?.label}
-                    variant="outlined"
-                    size="medium"
-                    style={{ width: "100%" }}
-                  />
-                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TextField
+                      id="outlined-basic"
+                      label={item?.label}
+                      variant="outlined"
+                      size="small"
+                      style={{ width: "100%" }}
+                    />
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(data, index)}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
                   </div>
                 ) : // select
                 item?.type === "select" ? (
-                  <div>
-                  <FormControl style={{ width: "100%" }} size="medium">
-                    <InputLabel id="demo-select-small">
-                      {item?.label}
-                    </InputLabel>
-                    <Select
-                      labelId="demo-select-small"
-                      id="demo-select-small"
-                      label={item?.label}
-                      value={item?.choices?.[0] || ""}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FormControl style={{ width: "100%" }} size="small">
+                      <InputLabel id="demo-select-small">
+                        {item?.label}
+                      </InputLabel>
+                      <Select
+                        labelId="demo-select-small"
+                        id="demo-select-small"
+                        label={item?.label}
+                        value={item?.choices?.[0] || ""}
+                      >
+                        {" "}
+                        {item?.choices?.map((choice, i) => (
+                          <MenuItem key={i} value={choice}>
+                            {choice}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(data, index)}
                     >
-                      {" "}
-                      {item?.choices?.map((choice, i) => (
-                        <MenuItem key={i} value={choice}>
-                          {choice}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                      <DeleteOutlineIcon />
+                    </IconButton>
                   </div>
                 ) : // radio
 
                 item?.type === "radio" ? (
-                  <div>
-                  <FormControl style={{ display: "flex" }}>
-                    <FormLabel id="demo-radio-buttons-group-label">
-                      {item.label}
-                    </FormLabel>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue={item?.choices?.[0] || ""}
-                      name="radio-buttons-group"
-                      row={true}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FormControl style={{ display: "flex" }}>
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        {item.label}
+                      </FormLabel>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue={item?.choices?.[0] || ""}
+                        name="radio-buttons-group"
+                        row={true}
+                      >
+                        {item?.choices.map((choice, i) => (
+                          <FormControlLabel
+                            key={i}
+                            value={choice}
+                            control={<Radio />}
+                            label={choice}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(data, index)}
                     >
-                      {item?.choices.map((choice, i) => (
-                        <FormControlLabel
-                          key={i}
-                          value={choice}
-                          control={<Radio />}
-                          label={choice}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                      <DeleteOutlineIcon />
+                    </IconButton>
                   </div>
                 ) : (
                   // checkbox
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <FormGroup>
                       <FormLabel id="demo-radio-buttons-group-label">
                         {item.label}
@@ -272,7 +319,12 @@ const CreateForm = () => {
                         ))}
                       </div>
                     </FormGroup>
-                    <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(data, index)}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
                   </div>
                 )}
               </div>
