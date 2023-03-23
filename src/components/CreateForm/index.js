@@ -37,7 +37,9 @@ const CreateForm = () => {
   const [choices, setChoices] = useState("");
 
   // data
-  const [data, setData] = useState(JSON.parse(localStorage.getItem("formData")) || []);
+  const [data, setData] = useState(
+    JSON.parse(localStorage.getItem("formData")) || []
+  );
 
   // Input type onchange
   const handleChange = (event) => {
@@ -62,6 +64,16 @@ const CreateForm = () => {
       setInputType("");
       setChoices("");
     }
+  };
+
+  // delete
+  const handleDelete = (fields ,index) => {
+
+    const filterItems = fields?.filter((item) => {
+      return fields?.indexOf(item) !== index
+    })
+    setData(filterItems);
+    localStorage.setItem("formData", JSON.stringify(filterItems))
   };
 
   return (
@@ -180,9 +192,10 @@ const CreateForm = () => {
         )}
         <Grid container spacing={2}>
           {data?.map((item, index) => (
-            <Grid item xs={12} md={6} key={index}>
+<Grid item xs={12} md={6} key={index}>
               <div>
                 {item?.type === "input" ? (
+                  <div>
                   <TextField
                     id="outlined-basic"
                     label={item?.label}
@@ -190,8 +203,11 @@ const CreateForm = () => {
                     size="medium"
                     style={{ width: "100%" }}
                   />
+                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                  </div>
                 ) : // select
                 item?.type === "select" ? (
+                  <div>
                   <FormControl style={{ width: "100%" }} size="medium">
                     <InputLabel id="demo-select-small">
                       {item?.label}
@@ -210,9 +226,12 @@ const CreateForm = () => {
                       ))}
                     </Select>
                   </FormControl>
+                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                  </div>
                 ) : // radio
 
                 item?.type === "radio" ? (
+                  <div>
                   <FormControl style={{ display: "flex" }}>
                     <FormLabel id="demo-radio-buttons-group-label">
                       {item.label}
@@ -233,23 +252,28 @@ const CreateForm = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
+                   <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                  </div>
                 ) : (
                   // checkbox
-                  <FormGroup>
-                    <FormLabel id="demo-radio-buttons-group-label">
-                      {item.label}
-                    </FormLabel>
+                  <div>
+                    <FormGroup>
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        {item.label}
+                      </FormLabel>
 
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      {item?.choices.map((choice, index) => (
-                        <FormControlLabel
-                          key={index}
-                          control={<Checkbox defaultChecked={false} />}
-                          label={choice}
-                        />
-                      ))}
-                    </div>
-                  </FormGroup>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        {item?.choices.map((choice, index) => (
+                          <FormControlLabel
+                            key={index}
+                            control={<Checkbox defaultChecked={false} />}
+                            label={choice}
+                          />
+                        ))}
+                      </div>
+                    </FormGroup>
+                    <Button onClick={() => handleDelete(data,index)}>Delete</Button>
+                  </div>
                 )}
               </div>
             </Grid>
