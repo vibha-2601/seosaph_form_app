@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Paper, Box, TextField, Grid, Button } from "@material-ui/core";
+import {
+  Paper,
+  Box,
+  TextField,
+  Grid,
+  Button,
+  RadioGroup,
+  Radio,
+  FormLabel,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,39 +30,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateForm = () => {
-
   // [States]
   const classes = useStyles();
   const [inputType, setInputType] = useState("");
-const [inputLabel, setInputLabel] = useState('');
-const [choices, setChoices] = useState('');
-
-  
+  const [inputLabel, setInputLabel] = useState("");
+  const [choices, setChoices] = useState("");
 
   // data
   const [data, setData] = useState([]);
 
-
-
-// Input type onchange
+  // Input type onchange
   const handleChange = (event) => {
     setInputType(event.target.value);
   };
 
   // add field
   const handleAddField = () => {
-const object = {
-  label: inputLabel,
-  type: inputType,
-  choices: choices?.split(',')
-}
-setData([...data,object])
-setInputLabel("")
-setInputType("")
-setChoices("")
-
-console.log(data)
-  }
+    const object = {
+      label: inputLabel,
+      type: inputType,
+      choices: choices?.split(","),
+    };
+    setData([...data, object]);
+    setInputLabel("");
+    setInputType("");
+    setChoices("");
+  };
+  console.log(data);
 
   return (
     <div className={classes.root}>
@@ -69,7 +75,11 @@ console.log(data)
 
         <Grid container spacing={2}>
           {/* [Label Input] */}
-          <Grid item xs={12} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}>
+          <Grid
+            item
+            xs={12}
+            md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}
+          >
             <TextField
               id="outlined-basic"
               label="Enter input label"
@@ -82,7 +92,11 @@ console.log(data)
           </Grid>
 
           {/* [Type input select] */}
-          <Grid item xs={12} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}>
+          <Grid
+            item
+            xs={12}
+            md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 5}
+          >
             <FormControl style={{ width: "100%" }} size="medium">
               <InputLabel id="demo-select-small">Input Type</InputLabel>
               <Select
@@ -102,8 +116,7 @@ console.log(data)
 
           {/* [If type select] */}
           {["select", "radio", "checkbox"]?.includes(inputType) && (
-          <Grid item xs={12} md={3}>
-            
+            <Grid item xs={12} md={3}>
               <TextField
                 style={{ width: "100%" }}
                 id="input"
@@ -114,14 +127,98 @@ console.log(data)
                 value={choices}
                 onChange={(e) => setChoices(e.target.value)}
               />
-           
-          </Grid>
-           )}
+            </Grid>
+          )}
 
           {/* Button */}
-          <Grid item xs={24} md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 2}>
-<Button size='large' style={{width: '100%'}} variant="outlined" onClick={handleAddField}>Add</Button>
+          <Grid
+            item
+            xs={24}
+            md={["select", "radio", "checkbox"]?.includes(inputType) ? 3 : 2}
+          >
+            <Button
+              size="large"
+              style={{ width: "100%" }}
+              variant="outlined"
+              onClick={handleAddField}
+            >
+              Add
+            </Button>
           </Grid>
+        </Grid>
+
+        {/* input type */}
+        <Grid container spacing={2}>
+          {data?.map((item, index) => (
+            <Grid item xs={12} md={6} key={index}>
+              <div>
+                {item?.type === "input" ? (
+                  <TextField
+                    id="outlined-basic"
+                    label={item?.label}
+                    variant="outlined"
+                    size="medium"
+                    style={{ width: "100%" }}
+                  />
+                ) : // select
+                item?.type === "select" ? (
+                  <FormControl style={{ width: "100%" }} size="medium">
+                    <InputLabel id="demo-select-small">
+                      {item?.label}
+                    </InputLabel>
+                    <Select
+                      labelId="demo-select-small"
+                      id="demo-select-small"
+                      label={item?.label}
+                      value={item?.choices?.[0] || ""}
+                    >
+                      {" "}
+                      {item?.choices?.map((choice, i) => (
+                        <MenuItem key={i} value={choice}>
+                          {choice}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : // radio
+                item?.type === "radio" ? (
+                  <FormControl>
+                    <FormLabel id="demo-radio-buttons-group-label">
+                      {item.label}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      defaultValue={item?.choices?.[0] || ""}
+                      name="radio-buttons-group"
+                    >
+                      {item?.choices.map((choice, i) => (
+                        <FormControlLabel
+                          key={i}
+                          value={choice}
+                          control={<Radio />}
+                          label={choice}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                ) : (
+                  // checkbox
+                  <FormGroup>
+                    <FormLabel id="demo-radio-buttons-group-label">
+                      {item.label}
+                    </FormLabel>
+                    {item?.choices.map((choice, index) => (
+                      <FormControlLabel
+                        key={index}
+                        control={<Checkbox defaultChecked={false} />}
+                        label={choice}
+                      />
+                    ))}
+                  </FormGroup>
+                )}
+              </div>
+            </Grid>
+          ))}
         </Grid>
       </Paper>
     </div>
