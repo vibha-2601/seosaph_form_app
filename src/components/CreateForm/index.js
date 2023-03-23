@@ -46,17 +46,22 @@ const CreateForm = () => {
 
   // add field
   const handleAddField = () => {
-    const object = {
-      label: inputLabel,
-      type: inputType,
-      choices: choices?.split(","),
-    };
-    setData([...data, object]);
-    setInputLabel("");
-    setInputType("");
-    setChoices("");
+    if (inputLabel === "" || inputType === "") {
+      alert("Please fill the field");
+    } else if (inputType !== "input" && choices.length === 0) {
+      alert("Enter valid choices!");
+    } else {
+      const object = {
+        label: inputLabel,
+        type: inputType,
+        choices: choices?.split(","),
+      };
+      setData([...data, object]);
+      setInputLabel("");
+      setInputType("");
+      setChoices("");
+    }
   };
-  console.log(data);
 
   return (
     <div className={classes.root}>
@@ -147,7 +152,31 @@ const CreateForm = () => {
           </Grid>
         </Grid>
 
-        {/* input type */}
+        {data.length > 0 && (
+          <div
+            style={{
+              width: "100%",
+              height: 1,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              margin: "40px 0",
+            }}
+          />
+        )}
+
+        {/* Data */}
+
+        {data?.length > 0 && (
+          <div
+            style={{
+              fontSize: 24,
+              textAlign: "center",
+              fontWeight: "bold",
+              marginBottom: 20,
+            }}
+          >
+            My Form
+          </div>
+        )}
         <Grid container spacing={2}>
           {data?.map((item, index) => (
             <Grid item xs={12} md={6} key={index}>
@@ -181,8 +210,9 @@ const CreateForm = () => {
                     </Select>
                   </FormControl>
                 ) : // radio
+
                 item?.type === "radio" ? (
-                  <FormControl>
+                  <FormControl style={{ display: "flex" }}>
                     <FormLabel id="demo-radio-buttons-group-label">
                       {item.label}
                     </FormLabel>
@@ -190,6 +220,7 @@ const CreateForm = () => {
                       aria-labelledby="demo-radio-buttons-group-label"
                       defaultValue={item?.choices?.[0] || ""}
                       name="radio-buttons-group"
+                      row={true}
                     >
                       {item?.choices.map((choice, i) => (
                         <FormControlLabel
@@ -207,13 +238,16 @@ const CreateForm = () => {
                     <FormLabel id="demo-radio-buttons-group-label">
                       {item.label}
                     </FormLabel>
-                    {item?.choices.map((choice, index) => (
-                      <FormControlLabel
-                        key={index}
-                        control={<Checkbox defaultChecked={false} />}
-                        label={choice}
-                      />
-                    ))}
+
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      {item?.choices.map((choice, index) => (
+                        <FormControlLabel
+                          key={index}
+                          control={<Checkbox defaultChecked={false} />}
+                          label={choice}
+                        />
+                      ))}
+                    </div>
                   </FormGroup>
                 )}
               </div>
