@@ -37,7 +37,7 @@ const CreateForm = () => {
   const [choices, setChoices] = useState("");
 
   // data
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(JSON.parse(localStorage.getItem("formData")) || []);
 
   // Input type onchange
   const handleChange = (event) => {
@@ -57,6 +57,7 @@ const CreateForm = () => {
         choices: choices?.split(","),
       };
       setData([...data, object]);
+      localStorage.setItem("formData", JSON.stringify([...data, object]));
       setInputLabel("");
       setInputType("");
       setChoices("");
